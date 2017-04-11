@@ -139,13 +139,13 @@ class SecondWindow(QWidget):
 
         self.tabWidget1 = QWidget(self)
         self.tabWidget1.setStyleSheet("QWidget { background-color: #4c88ff }")
-        SecondWindow.tabWidget2 = QWidget(self)
-        SecondWindow.tabWidget3 = QWidget(self)
+        self.tabWidget2 = ThirdWindow()
+        self.tabWidget3 = FourthWindow()
 
         self.tabs = QTabWidget()
         self.tabs.addTab(self.tabWidget1,'window &2')
-        self.tabs.addTab(SecondWindow.tabWidget2,'window &3')
-        self.tabs.addTab(SecondWindow.tabWidget3,'window &4')
+        self.tabs.addTab(self.tabWidget2,'window &3')
+        self.tabs.addTab(self.tabWidget3,'window &4')
 
         self.save = QPushButton("Save")
         self.load = QPushButton("Load")
@@ -231,14 +231,14 @@ class ThirdWindow(QWidget):
         self.matrixS = QLabel('lol')
         self.matrixR = QLabel('kek')
 
-        self.grid = QGridLayout(SecondWindow.tabWidget2)
+        self.grid = QGridLayout()
         self.grid.setSpacing(5)
         self.grid.addWidget(ThirdWindow.setA,0,0)
         self.grid.addWidget(ThirdWindow.setB,0,1)
         self.grid.addWidget(self.matrixR,0,2)
         self.grid.addWidget(self.matrixS,1,0,1,3)
 
-        SecondWindow.tabWidget2.setLayout(self.grid)
+        self.setLayout(self.grid)
 
         self.show()
 
@@ -250,11 +250,11 @@ class FourthWindow(QWidget):
     def initUI(self):
 
 
-        self.grid = QGridLayout(ThirdWindow.tabWidget3)
+        self.grid = QGridLayout()
         self.grid.setSpacing(5)
 
 
-        SecondWindow.tabWidget3.setLayout(self.grid)
+        self.setLayout(self.grid)
 
 
 if __name__ == '__main__':
