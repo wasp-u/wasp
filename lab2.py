@@ -129,6 +129,22 @@ class SecondWindow(QWidget):
 
 
     def initUI(self):
+        widget = QWidget()
+
+        radio1 = QRadioButton('set A')
+        radio2 = QRadioButton('set B')
+        clear = QPushButton("Clear")
+        clear.setFlat(True)
+        clear.setStyleSheet("QWidget { background-color: #4c88ff}")
+
+        gridbox = QGridLayout()
+        gridbox.addWidget(radio1,0,0)
+        gridbox.addWidget(radio2,0,1)
+        gridbox.addWidget(clear,0,2)
+        box = QGroupBox("Оберіть множину",widget)
+        box.setLayout(gridbox)
+        box.setStyleSheet("QWidget { background-color: #ffc60c}")
+
         bg = "#353638"
         appearance = self.palette()
         appearance.setColor(QPalette.Active, QPalette.Window,
@@ -148,13 +164,13 @@ class SecondWindow(QWidget):
         self.tabs.addTab(self.tabWidget3,'window &4')
 
         self.save = QPushButton("Save")
+        self.save.setFlat(True)
         self.load = QPushButton("Load")
-        self.clear = QPushButton("Clear")
+        self.load.setFlat(True)
+
         self.man = QLabel("Man:")
         self.woman = QLabel("Woman:")
         self.set = QLabel("Your set:")
-        self.radioA = QRadioButton('set A')
-        self.radioB = QRadioButton('set B')
 
         self.listMan = QListWidget()
         self.listWoman = QListView()
@@ -176,17 +192,16 @@ class SecondWindow(QWidget):
 
         self.grid = QGridLayout(self.tabWidget1)
         self.grid.setSpacing(5)
-        self.grid.addWidget(self.radioA,0,0)
-        self.grid.addWidget(self.radioB,0,1)
+
         self.grid.addWidget(self.man,1,0)
         self.grid.addWidget(self.woman,1,1)
         self.grid.addWidget(self.set,1,2,1,2)
         self.grid.addWidget(self.listSet,2,2,1,2)
         self.grid.addWidget(self.listMan,2,0)
         self.grid.addWidget(self.listWoman,2,1)
-        self.grid.addWidget(self.clear,0,2)
         self.grid.addWidget(self.save,3,2)
         self.grid.addWidget(self.load,3,3)
+        self.grid.addWidget(box,0,0,1,4)
         self.tabWidget1.setLayout(self.grid)
 
         self.maingrid = QGridLayout()
@@ -195,7 +210,7 @@ class SecondWindow(QWidget):
 
         self.setLayout(self.maingrid)
 
-        self.resize(600, 400)
+        self.resize(520, 400)
         self.center()
         self.setWindowTitle('MainWIndow')
 
@@ -225,22 +240,26 @@ class ThirdWindow(QWidget):
         self.initUI()
 
     def initUI(self):
+        bg = "#ffe44c"
+        self.setStyleSheet("QWidget { background-color: #d1cfcf }")
 
         ThirdWindow.setA = QListWidget()
         ThirdWindow.setB = QListWidget()
         self.matrixS = QLabel('lol')
         self.matrixR = QLabel('kek')
+        self.setALabel = QLabel('Set A:')
+        self.setBLabel = QLabel('Set B:')
 
         self.grid = QGridLayout()
         self.grid.setSpacing(5)
-        self.grid.addWidget(ThirdWindow.setA,0,0)
-        self.grid.addWidget(ThirdWindow.setB,0,1)
-        self.grid.addWidget(self.matrixR,0,2)
-        self.grid.addWidget(self.matrixS,1,0,1,3)
+        self.grid.addWidget(self.setALabel,0,0)
+        self.grid.addWidget(self.setBLabel,0,1)
+        self.grid.addWidget(ThirdWindow.setA,1,0)
+        self.grid.addWidget(ThirdWindow.setB,1,1)
+        self.grid.addWidget(self.matrixR,1,2)
+        self.grid.addWidget(self.matrixS,2,0,1,3)
 
         self.setLayout(self.grid)
-
-        self.show()
 
 class FourthWindow(QWidget):
     def __init__(self):
