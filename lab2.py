@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-
+from numpy import *
 
 class StartWindow(QWidget):
 
@@ -121,6 +121,20 @@ class MainWindow(QWidget):
         else:
             event.ignore()
 
+class myListWidget(QListWidget) :
+    def Clicked(self,item) :
+        if item.text() in SecondWindow.s:
+            pass
+        else:
+            SecondWindow.s.append(item.text())
+            SecondWindow.listSet.addItem(item.text())
+
+    def removeSel(self,item):
+        SecondWindow.s.remove(item.text())
+        SecondWindow.listSet.clear()
+        SecondWindow.listSet.addItems(SecondWindow.s)
+
+
 class SecondWindow(QWidget):
 
     def __init__(self):
@@ -129,18 +143,25 @@ class SecondWindow(QWidget):
 
 
     def initUI(self):
+        SecondWindow.setA = list()
+        SecondWindow.s = list()
+        SecondWindow.setB = list()
         widget = QWidget()
 
-        radio1 = QRadioButton('set A')
-        radio2 = QRadioButton('set B')
-        clear = QPushButton("Clear")
-        clear.setFlat(True)
-        clear.setStyleSheet("QWidget { background-color: #4c88ff}")
+        self.radio1 = QRadioButton('set A')
+        self.radio2 = QRadioButton('set B')
+        self.clear = QPushButton("Clear")
+        self.add = QPushButton("Add")
+        self.add.setFlat(True)
+        self.clear.setFlat(True)
+        self.clear.setStyleSheet("QWidget { background-color: #4c88ff}")
 
         gridbox = QGridLayout()
-        gridbox.addWidget(radio1,0,0)
-        gridbox.addWidget(radio2,0,1)
-        gridbox.addWidget(clear,0,2)
+        gridbox.addWidget(self.radio1,0,0)
+        gridbox.addWidget(self.radio2,0,1)
+        gridbox.addWidget(self.clear,0,3)
+        gridbox.addWidget(self.add,0,2)
+
         box = QGroupBox("Оберіть множину",widget)
         box.setLayout(gridbox)
         box.setStyleSheet("QWidget { background-color: #ffc60c}")
@@ -156,7 +177,9 @@ class SecondWindow(QWidget):
         self.tabWidget1 = QWidget(self)
         self.tabWidget1.setStyleSheet("QWidget { background-color: #4c88ff }")
         self.tabWidget2 = ThirdWindow()
+        self.tabWidget2.setStyleSheet("QWidget { background-color: #dfdfdf }")
         self.tabWidget3 = FourthWindow()
+        self.tabWidget3.setStyleSheet("QWidget { background-color: #ffcdcd }")
 
         self.tabs = QTabWidget()
         self.tabs.addTab(self.tabWidget1,'window &2')
@@ -168,27 +191,26 @@ class SecondWindow(QWidget):
         self.load = QPushButton("Load")
         self.load.setFlat(True)
 
+
         self.man = QLabel("Man:")
         self.woman = QLabel("Woman:")
         self.set = QLabel("Your set:")
 
-        self.listMan = QListWidget()
-        self.listWoman = QListView()
-        self.listSet = QListView()
+        self.listMan = myListWidget()
+        self.listWoman = myListWidget()
+        SecondWindow.listSet = myListWidget()
 
         self.ManNames = ['lol','kek','cheburek']
         for Item in self.ManNames:
             self.listMan.addItem(Item)
+        self.listMan.itemClicked.connect(self.listMan.Clicked)
 
-        model = QStandardItemModel(self.listWoman)
+        self.listSet.itemClicked.connect(self.listSet.removeSel)
 
         self.WomanNames = ['Анна','Анастасия','Алёна','Елена','Андрюха']
-
-        for name in self.WomanNames:
-            item = QStandardItem(name)
-            model.appendRow(item)
-
-        self.listWoman.setModel(model)
+        for Item in self.WomanNames:
+            self.listWoman.addItem(Item)
+        self.listWoman.itemClicked.connect(self.listMan.Clicked)
 
         self.grid = QGridLayout(self.tabWidget1)
         self.grid.setSpacing(5)
@@ -196,8 +218,8 @@ class SecondWindow(QWidget):
         self.grid.addWidget(self.man,1,0)
         self.grid.addWidget(self.woman,1,1)
         self.grid.addWidget(self.set,1,2,1,2)
-        self.grid.addWidget(self.listSet,2,2,1,2)
-        self.grid.addWidget(self.listMan,2,0)
+        self.grid.addWidget(SecondWindow.listSet,2,2,1,2)
+        self.grid.addWidget(self.listMan,2.5,0)
         self.grid.addWidget(self.listWoman,2,1)
         self.grid.addWidget(self.save,3,2)
         self.grid.addWidget(self.load,3,3)
@@ -209,6 +231,9 @@ class SecondWindow(QWidget):
         self.maingrid.addWidget(self.tabs,0,0)
 
         self.setLayout(self.maingrid)
+
+        self.add.clicked.connect(self.addEvent)
+        self.clear.clicked.connect(self.clearSet)
 
         self.resize(520, 400)
         self.center()
@@ -222,6 +247,26 @@ class SecondWindow(QWidget):
         qr.moveCenter(cp)
         self.move(qr.topLeft())
 
+
+    def addEvent(self):
+        if self.radio1.isChecked():
+            try:
+                SecondWindow.setA.clear()
+                SecondWindow.setA = copy(SecondWindow.s)
+                ThirdWindow.setA.addItems(SecondWindow.s)
+            except:
+                print('error')
+        if self.radio2.isChecked():
+            try:
+                SecondWindow.setB.clear()
+                SecondWindow.setB = copy(SecondWindow.s)
+                ThirdWindow.setB.addItems(SecondWindow.s)
+            except:
+                print('error')
+
+    def clearSet(self):
+        SecondWindow.listSet.clear()
+        SecondWindow.s.clear()
 
     def closeEvent(self, event):
 
@@ -240,13 +285,17 @@ class ThirdWindow(QWidget):
         self.initUI()
 
     def initUI(self):
-        bg = "#ffe44c"
-        self.setStyleSheet("QWidget { background-color: #d1cfcf }")
 
+        self.aSb = QPushButton("aSb")
+        self.aSb.setFlat(True)
+        self.aSb.clicked.connect(self.showGraphS)
+        self.aRb = QPushButton("aRb")
+        self.aRb.setFlat(True)
         ThirdWindow.setA = QListWidget()
         ThirdWindow.setB = QListWidget()
-        self.matrixS = QLabel('lol')
-        self.matrixR = QLabel('kek')
+        self.matrixS = QTableView()
+        self.matrixR = QTableView()
+
         self.setALabel = QLabel('Set A:')
         self.setBLabel = QLabel('Set B:')
 
@@ -256,10 +305,23 @@ class ThirdWindow(QWidget):
         self.grid.addWidget(self.setBLabel,0,1)
         self.grid.addWidget(ThirdWindow.setA,1,0)
         self.grid.addWidget(ThirdWindow.setB,1,1)
-        self.grid.addWidget(self.matrixR,1,2)
-        self.grid.addWidget(self.matrixS,2,0,1,3)
+        self.grid.addWidget(self.aSb,0,2)
+        self.grid.addWidget(self.aRb,0,3)
+        self.grid.addWidget(self.matrixR,1,2,1,2)
+        self.grid.addWidget(self.matrixS,2,0,1,4)
 
         self.setLayout(self.grid)
+
+    def showGraphS(self):
+        self.modelS = QStandardItemModel(len(SecondWindow.setB),len(SecondWindow.setA))
+        self.matrixS.setModel(self.modelS)
+        self.matrixS.setShowGrid(False)
+        self.modelS.setHorizontalHeaderLabels(SecondWindow.setA)
+        self.modelS.setVerticalHeaderLabels(SecondWindow.setB)
+        zero = QStandardItem('lol')
+        self.modelS.setItem(0,0,zero)
+        
+        self.modelS.setItem(self.modelS.takeItem(0,0))
 
 class FourthWindow(QWidget):
     def __init__(self):
