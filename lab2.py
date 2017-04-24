@@ -1,4 +1,4 @@
-import sys
+import sys, random
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from numpy import *
@@ -155,7 +155,7 @@ class SecondWindow(QWidget):
         self.add.setFlat(True)
         self.clear.setFlat(True)
         self.clear.setStyleSheet("QWidget { background-color: #4c88ff}")
-
+         #box
         gridbox = QGridLayout()
         gridbox.addWidget(self.radio1,0,0)
         gridbox.addWidget(self.radio2,0,1)
@@ -165,6 +165,7 @@ class SecondWindow(QWidget):
         box = QGroupBox("Оберіть множину",widget)
         box.setLayout(gridbox)
         box.setStyleSheet("QWidget { background-color: #ffc60c}")
+         #box
 
         bg = "#353638"
         appearance = self.palette()
@@ -235,7 +236,7 @@ class SecondWindow(QWidget):
         self.add.clicked.connect(self.addEvent)
         self.clear.clicked.connect(self.clearSet)
 
-        self.resize(520, 400)
+        self.resize(700, 500)
         self.center()
         self.setWindowTitle('MainWIndow')
 
@@ -291,10 +292,9 @@ class ThirdWindow(QWidget):
         self.aSb.clicked.connect(self.showGraphS)
         self.aRb = QPushButton("aRb")
         self.aRb.setFlat(True)
+        self.aRb.clicked.connect(self.showGraphR)
         ThirdWindow.setA = QListWidget()
         ThirdWindow.setB = QListWidget()
-        self.matrixS = QTableView()
-        self.matrixR = QTableView()
 
         self.setALabel = QLabel('Set A:')
         self.setBLabel = QLabel('Set B:')
@@ -307,21 +307,40 @@ class ThirdWindow(QWidget):
         self.grid.addWidget(ThirdWindow.setB,1,1)
         self.grid.addWidget(self.aSb,0,2)
         self.grid.addWidget(self.aRb,0,3)
-        self.grid.addWidget(self.matrixR,1,2,1,2)
-        self.grid.addWidget(self.matrixS,2,0,1,4)
+
 
         self.setLayout(self.grid)
 
     def showGraphS(self):
-        self.modelS = QStandardItemModel(len(SecondWindow.setB),len(SecondWindow.setA))
-        self.matrixS.setModel(self.modelS)
-        self.matrixS.setShowGrid(False)
-        self.modelS.setHorizontalHeaderLabels(SecondWindow.setA)
-        self.modelS.setVerticalHeaderLabels(SecondWindow.setB)
-        zero = QStandardItem('lol')
-        self.modelS.setItem(0,0,zero)
-        
-        self.modelS.setItem(self.modelS.takeItem(0,0))
+        self.matrixS = QTableWidget(len(SecondWindow.setB),len(SecondWindow.setA))
+        self.grid.addWidget(self.matrixS,2,0,1,7)
+        r = random.randint(0,len(SecondWindow.setA))
+
+        for i in range(len(SecondWindow.setA)):
+            self.matrixS.setHorizontalHeaderItem(i,QTableWidgetItem(SecondWindow.setA[i]))
+        for j in range(len(SecondWindow.setB)):
+            self.matrixS.setVerticalHeaderItem(j,QTableWidgetItem(SecondWindow.setB[j]))
+        for i in range(len(SecondWindow.setA)):
+            for j in range(len(SecondWindow.setB)):
+                if random.randint(0,4) == 1:
+                    self.matrixS.setItem(j,i,QTableWidgetItem('1'))
+                else: self.matrixS.setItem(j,i,QTableWidgetItem('0'))
+
+    def showGraphR(self):
+        self.matrixR = QTableWidget(len(SecondWindow.setB),len(SecondWindow.setA))
+        self.grid.addWidget(self.matrixR,1,2,1,5)
+        r = random.randint(0,len(SecondWindow.setA))
+
+        for i in range(len(SecondWindow.setA)):
+            self.matrixR.setHorizontalHeaderItem(i,QTableWidgetItem(SecondWindow.setA[i]))
+        for j in range(len(SecondWindow.setB)):
+            self.matrixR.setVerticalHeaderItem(j,QTableWidgetItem(SecondWindow.setB[j]))
+        for i in range(len(SecondWindow.setA)):
+            for j in range(len(SecondWindow.setB)):
+                if random.randint(0,4) == 1:
+                    self.matrixR.setItem(j,i,QTableWidgetItem('1'))
+                else: self.matrixR.setItem(j,i,QTableWidgetItem('0'))
+
 
 class FourthWindow(QWidget):
     def __init__(self):
